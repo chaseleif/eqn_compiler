@@ -8,6 +8,9 @@
 #include <stdlib.h>
 #include "tokendef.h"
 
+ /* to pass static strings to driver */
+char *lexstr;
+
  /* integers to track line and column numbers */
 int scancol = 1;
 int yycol = 1;
@@ -25,8 +28,9 @@ void countLines();
 
 newline    [\r]?[\n]
 whitespace [\t ]+
-integer    [0-9]+
-chars      [a-zA-Z]+
+integer    0|[1-9][0-9]*
+float      {integer}\.(0|[0-9]*[1-9])
+variable   [a-zA-Z]+
 
 yylineno = 1;
 
@@ -53,7 +57,8 @@ yylineno = 1;
 {whitespace}  {updateCol();}
 
 {integer}     {updateCol(); return INTCONST;}
-{chars}       {updateCol(); return processChars();}
+{float}       {updateCol(); return FLOATCONST;}
+{variable}    {updateCol(); return processChars();}
 
  /* The . regex matches everything except \n
     This is at the end of this section to catch anything not handled
@@ -62,8 +67,7 @@ yylineno = 1;
     Don't use functions that affect the memory, e.g., free, strdup, realloc.
  */
 .             {
-                /* print what the yytext buffer holds */
-                printf("#  yytext=\"%s\"\n",yytext);
+                lexstr = "IGNORED";
                 updateCol();
                 return UNKNOWN;
               }
@@ -72,17 +76,23 @@ yylineno = 1;
 
 /* The user routine section provides space to define functions
 */
-/* Here we'll make any characters in the CHARSCONST lowercase */
+/* Make any characters in variables lowercase */
 int processChars() {
   for (int i=0;yytext[i];++i) {
-    if ('A' <= yytext[i] && yytext[i] <= 'Z')
-      yytext[i] |= 0x20;
+    yytext[i] |= 0x20;
   }
-  return CHARSCONST;
+  return VARIABLE;
 }
 
 /* TODO:
     Implement functions to correctly keep track of column numbers
 */
-void updateCol(){ yycol=scancol; ++scancol; }
-void countLines(){ yycol=scancol; scancol=1; ++yylineno; }
+void updateCol() {
+  yycol=scancol;
+  ++scancol;
+}
+void countLines() {
+  yycol=scancol;
+  scancol=1;
+  ++yylineno;
+}

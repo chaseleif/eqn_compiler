@@ -3,18 +3,20 @@
 #include "tokendef.h"
 
 //extern int yylex(void);
-extern char *yytext;
+extern char *yytext, *lexstr;
 
-extern int yylineno;
-extern int yycol;
+extern int yylineno, yycol;
 
 void printToken(const int tokenNum) {
   switch(tokenNum) {
-  case CHARSCONST:
-    printf("<CHARS, %s> : (%d:%d)\n", yytext, yylineno, yycol);
+  case VARIABLE:
+    printf("<VARIABLE, %s> : (%d:%d)\n", yytext, yylineno, yycol);
     break;
   case INTCONST:
     printf("<INTEGER, %s> : (%d:%d)\n", yytext, yylineno, yycol);
+    break;
+  case FLOATCONST:
+    printf("<FLOAT, %s> : (%d:%d)\n", yytext, yylineno, yycol);
     break;
   case LPAREN:
     printf("<PUNCTUATION, (> : (%d:%d)\n", yylineno, yycol);
@@ -23,8 +25,10 @@ void printToken(const int tokenNum) {
     printf("<PUNCTUATION, )> : (%d:%d)\n", yylineno, yycol);
     break;
   case UNKNOWN:
-    printf("<UNKNOWN TOKEN> %s: (%d:%d)\n", yytext, yylineno, yycol);
+    printf("<%s> %s: (%d:%d)\n", lexstr, yytext, yylineno, yycol);
     break;
+  // tokenNum isn't in tokendef.h or handled in cases above
+  // (this shouldn't happen)
   default:
     printf("<???> : (%d:%d)\n", yylineno, yycol);
     break;
@@ -33,10 +37,19 @@ void printToken(const int tokenNum) {
 }
 
 int main(int argc,char **argv) {
+  FILE *oldstdin, *infile = NULL;
+  if (argc == 2 && (infile = fopen(argv[1]))) {
+    oldstdin = stdin;
+    stdin = infile;
+  }
   int ret = yylex();
   while (ret) {
     printToken(ret);
     ret = yylex();
+  }
+  if (infile) {
+    fclose(infile);
+    stdin = oldstdin;
   }
   return EXIT_SUCCESS;
 }
