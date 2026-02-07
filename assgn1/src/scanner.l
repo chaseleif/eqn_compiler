@@ -19,6 +19,7 @@ int scanlineno = 1;
 /* TODO: functions to update line and column numbers */
 void updateCol();
 void countLines();
+int processChars();
 
 %}
 /* regular definitions assign a regular expression to a name

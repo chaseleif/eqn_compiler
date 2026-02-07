@@ -20,8 +20,6 @@ ___
 - [regex101](https://regex101.com)
 - [Flex](https://ftp.gnu.org/old-gnu/Manuals/flex-2.5.4/html_mono/flex.html)
 - [Bison](https://www.gnu.org/software/bison/manual/)
+- [dinosaur.compilertools.net mirror](https://chaseleif.tech/dinosaur.compilertools.net)
 
-dinosaur.compilertools.net used to be a great resource, but is now defunct[^1]
-
-[^1]: I may make a new mirror from archive.org
 ___
