@@ -18,8 +18,9 @@ Each phase has a Makefile and is compiled using `make`
 ___
 ### Resources
 - [regex101](https://regex101.com)
+- [JFLAP](https://www.jflap.org)
 - [Flex](https://ftp.gnu.org/old-gnu/Manuals/flex-2.5.4/html_mono/flex.html)
-- [Bison](https://www.gnu.org/software/bison/manual/)
+- [Bison](https://www.gnu.org/software/bison/manual)
 - [dinosaur.compilertools.net mirror](https://chaseleif.tech/dinosaur.compilertools.net)
 
 ___
