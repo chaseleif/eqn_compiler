@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "tokendef.h"
 
+extern FILE *yyin;
 extern int yylex(void);
 extern char *yytext, *lexstr;
 
@@ -37,10 +38,9 @@ void printToken(const int tokenNum) {
 }
 
 int main(int argc,char **argv) {
-  FILE *oldstdin, *infile = NULL;
+  FILE *infile = NULL;
   if (argc == 2 && (infile = fopen(argv[1],"r"))) {
-    oldstdin = stdin;
-    stdin = infile;
+    yyin = infile;
   }
   int ret = yylex();
   while (ret) {
@@ -49,7 +49,6 @@ int main(int argc,char **argv) {
   }
   if (infile) {
     fclose(infile);
-    stdin = oldstdin;
   }
   return EXIT_SUCCESS;
 }
